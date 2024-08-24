@@ -1,8 +1,10 @@
+
 numpy
 pandas
 scikit-learn
 seaborn
 matplotlib
+tensorflow
 flask
 mlflow
 dvc
@@ -15,3 +17,7 @@ tox
 black
 flake8
 mypy
+
+
+# install local package in editabl
+-e .
