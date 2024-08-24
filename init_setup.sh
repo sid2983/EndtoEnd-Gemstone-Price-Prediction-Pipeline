@@ -8,7 +8,7 @@ echo [$(date)] : "Starting init_setup.sh"
 
 echo [$(date)] : "Creating virtual environment"
 
-conda create --prefix ./env python=3.11 -y
+conda create --prefix ./env python=3.12 -y
 
 echo [$(date)] : "Virtual environment created"
 
@@ -26,6 +26,7 @@ echo [$(date)] : "Virtual environment activated "
 conda init && conda activate ./env &&  echo "Terminal activated" || echo "Terminal activation failed"
 
 echo [$(date)] : "Virtual environment activated in terminal successfully"
+
 
 
 

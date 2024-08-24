@@ -10,7 +10,7 @@ mlflow
 dvc
 
 
-# dev requirements
+dev requirements
 
 pytest
 tox
@@ -19,5 +19,3 @@ flake8
 mypy
 
 
-# install local package in editabl
--e .

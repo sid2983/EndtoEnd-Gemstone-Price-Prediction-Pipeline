@@ -1,6 +1,8 @@
 import sys
-from src.logger import loggings
+from src.logger.loggings import logging
 
-loggings.INFO("This is my first testing")
+logging.info("This is my first ml package testing")
 
-print(sys.exc_info())
+# print(loggings.t)
+
+# print(sys.exc_info())
