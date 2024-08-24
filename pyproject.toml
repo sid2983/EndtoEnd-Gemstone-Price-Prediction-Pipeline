@@ -1,7 +1,12 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ['setuptools>=42.0', "wheel"]
 build-backend = "setuptools.build_meta"
 
-[project]
-name = "firste2eml"
-version = "0.1.0"
+[tool.pytest.ini_options]
+testpaths = [
+    "tests"
+    ]
+
+[tool.mypy]
+mypy_path = "src"
+ignore_missing_imports = true
