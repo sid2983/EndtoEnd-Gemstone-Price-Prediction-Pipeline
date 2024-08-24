@@ -2,6 +2,7 @@
 numpy
 pandas
 scikit-learn
+xgboost
 seaborn
 matplotlib
 tensorflow
@@ -10,7 +11,7 @@ mlflow
 dvc
 
 
-dev requirements
+# dev requirements
 
 pytest
 tox
