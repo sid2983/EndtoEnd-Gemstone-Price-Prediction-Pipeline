@@ -32,25 +32,93 @@ from keras.callbacks import EarlyStopping
 from keras.callbacks import ReduceLROnPlateau
 
 
+# just to check 
+from src.components.data_ingestion import DataIngestion, DataIngestionConfig
+from src.components.data_transformation import DataTransformation, DataTransformationConfig
+
+
 @dataclass
 class ModelTrainerConfig:
-    pass
+    trained_model_file_path = os.path.join('artifacts','model.pkl')
 
 
 
 class ModelTrainer:
     def __init__(self, config:ModelTrainerConfig):
-        self.config=config
+        self.model_trainer_config=config
 
     
-    def initiate_model_trainer(self):
+    def initiate_model_trainer(self,train_array, test_array):
         try:
             logging.info("Model Training Started")
-            self.read_data()
-            self.split_data()
-            self.scale_data()
+            logging.info("Splitting Dependent and Independent variables from train and test data")
+
+            X_train, y_train, X_test, y_test = (
+                train_array[:,:-1],
+                train_array[:,-1],
+                test_array[:,:-1],
+                test_array[:,-1]
+            )
+
+            ## Using ANN & XGBRegressor Stacking Model
+
+            nn_model = Sequential([
+                Dense(128, input_dim=X_train.shape[1], activation='relu', kernel_regularizer=l2(0.0001)),
+                Dense(256, activation='relu', kernel_regularizer=l2(0.0001)),
+                Dense(128, activation='relu', kernel_regularizer=l2(0.0001)),
+                Dense(1)  # Output layer for regression
+            ])
+
+            nn_model.compile(optimizer=AdamW(learning_rate=0.001, weight_decay=0.0001),
+                 loss='mean_squared_error',
+                 metrics=['mae'])
+            
+            
+
+            ## XGBRegressor Model
+            xgboost_model = xgb.XGBRegressor(learning_rate=0.01, n_estimators=1000, max_depth=5, alpha=10, gamma=0.1)
+
+
+            ## Stacking Model
+            
+            meta_learner = Ridge()
+
+            # send dictionary of models to evaluate_model function
+            models = {
+                'neural_network': nn_model,
+                'xgb': xgboost_model,
+                'meta_learner': meta_learner
+            }
+
+            logging.info("Model Training Initiated")
+            model_report:dict = evaluate_model(X_train, y_train, X_test, y_test,models)
+            print(model_report)
+
+            logging.info(f'Model Report : {model_report}')
+
             logging.info("Model Training Completed")
+
+            save_object(
+                file_path=self.model_trainer_config.trained_model_file_path,
+                obj=models
+            )
+
+            logging.info("Model Training Completed")
+
+
         except Exception as e:
             logging.info("Model Training Failed")
             raise CustomException(e,sys)
 
+
+# if __name__ == "__main__":
+
+#     obj=DataIngestion(DataIngestionConfig())
+
+#     train_data_path,test_data_path=obj.initiate_data_ingestion()
+
+#     data_transformation=DataTransformation(DataTransformationConfig())
+
+#     train_array,test_array=data_transformation.initiate_data_transformation(train_data_path,test_data_path)
+#     model_trainer = ModelTrainer(ModelTrainerConfig())
+#     model_trainer.initiate_model_trainer(train_array, test_array)

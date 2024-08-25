@@ -508,32 +508,33 @@ X_test = scaler.transform(X_test)
 
 # # XGBoost Regressor
 
-# xgb_pipe = Pipeline([('xgb', XGBRegressor())])
+xgb_pipe = Pipeline([('xgb', XGBRegressor())])
 
-# param_grid = {
-#     'xgb__n_estimators': [150,200],
-#     'xgb__learning_rate': [0.1,0.3],
-#     'xgb__max_depth': [3, 5,7],
-#     'xgb__min_child_weight': [1, 3, 5],
-#     'xgb__reg_lambda': [0.01, 0.1, 1],
+param_grid = {
+    'xgb__n_estimators': [150,200],
+    'xgb__learning_rate': [0.1,0.3],
+    'xgb__max_depth': [3, 5,7,10],
+    'xgb__min_child_weight': [1, 3, 5,7],
+    'xgb__lambda': [0.01, 0.1, 1],
+    'xgb__gamma': [0, 0.1, 0.2, 0.3],
   
-# }
+}
 
-# xgb_grid = GridSearchCV(xgb_pipe, param_grid, cv=4, n_jobs=-1, verbose=2)
+xgb_grid = GridSearchCV(xgb_pipe, param_grid, cv=4, n_jobs=-1, verbose=2)
 
-# xgb_grid.fit(X_train, y_train)
+xgb_grid.fit(X_train, y_train)
 
-# y_pred = xgb_grid.predict(X_test)
+y_pred = xgb_grid.predict(X_test)
 
-# print('R2 Score:', r2_score(y_test, y_pred))
+print('R2 Score:', r2_score(y_test, y_pred))
 
-# print('Mean Squared Error:', mean_squared_error(y_test, y_pred))
+print('Mean Squared Error:', mean_squared_error(y_test, y_pred))
 
-# print('Mean Absolute Error:', mean_absolute_error(y_test, y_pred))
+print('Mean Absolute Error:', mean_absolute_error(y_test, y_pred))
 
-# # print('best parameters:', xgb_grid.best_params_)
+print('best parameters:', xgb_grid.best_params_)
 
-# xgb_grid.best_estimator_.get_params()
+xgb_grid.best_estimator_.get_params()
 
 
 
@@ -843,119 +844,123 @@ print(rmse(y_test,meta_predictions))
 
 ### Trying again by PCA features
 
-X_pca = data.drop('price', axis=1)
-y_pca = data['price']
-
-from sklearn.decomposition import PCA
-features = ['carat', 'volume', 'surface_area']
-X_pca_features = X_pca[features]
-X_pca_features
-
-
-
-pca = PCA(n_components=1)
-X_pca_var = pca.fit_transform(X_pca)
-
-X_pca_df = pd.DataFrame(X_pca_var, columns=['PCA1'])
-
-
-X_pca_df
-
-
-X_reduced = X_pca.drop(['carat', 'volume', 'surface_area'], axis=1)
-
-X_final = pd.concat([X_reduced, X_pca_df], axis=1)
-
-X_final
-
-
-sns.heatmap(X_final.corr(), annot=True, cmap='magma')
-
-
-
-X_train_pca, X_test_pca, y_train_pca, y_test_pca = train_test_split(X_final, y_pca, test_size=0.25, random_state=42)
-
-scaler = StandardScaler()
-
-X_train_pca = scaler.fit_transform(X_train_pca)
-
-X_test_pca = scaler.transform(X_test_pca)
-
-
-
-
-
-
-
-
-
-nn_model_2 = Sequential([
-    Dense(128, input_dim=X_train_pca.shape[1], activation='relu', kernel_regularizer=l2(0.0001)),
-    Dense(256, activation='relu', kernel_regularizer=l2(0.0001)),
-    Dense(128, activation='relu', kernel_regularizer=l2(0.0001)),
-    Dense(1)  # Output layer for regression
-])
-
-nn_model_2.compile(optimizer=AdamW(learning_rate=0.001, weight_decay=0.0001),
-                 loss='mean_squared_error',
-                 metrics=['mae'])
-
-reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=1e-6)
-early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
-
-history_2 = nn_model_2.fit(X_train_pca, y_train_pca, epochs=100, batch_size=32, validation_split=0.2, verbose=1, callbacks=[reduce_lr, early_stopping])
-
-# Predict using neural network
-nn_train_preds_2 = nn_model_2.predict(X_train_pca)
-nn_valid_preds_2 = nn_model_2.predict(X_test_pca)
-
-# 2. **Train XGBoost**
-
-xgboost_model_2 = xgb.XGBRegressor(learning_rate=0.01, n_estimators=1000, max_depth=5, alpha=10, gamma=0.1)
-xgboost_model_2.fit(X_train_pca, y_train_pca)
-
-# Predict using XGBoost
-xgboost_train_preds_2 = xgboost_model_2.predict(X_train_pca)
-xgboost_valid_preds_2 = xgboost_model_2.predict(X_test_pca)
-
-# 3. **Combine Predictions**
-
-# Stack predictions from both models
-train_meta_features_2 = np.column_stack((xgboost_train_preds_2, nn_train_preds_2.flatten()))
-valid_meta_features_2 = np.column_stack((xgboost_valid_preds_2, nn_valid_preds_2.flatten()))
-
-# Train meta-learner
-meta_learner_2 = Ridge()
-meta_learner_2.fit(train_meta_features_2, y_train_pca)
-
-# Predict and evaluate
-meta_predictions_2 = meta_learner_2.predict(valid_meta_features_2)
-new_r2 = r2_score(y_test_pca, meta_predictions_2)
-print(f"Stacked Model R² Score: {new_r2}")
-
-# Plot training history for Neural Network
-plt.plot(history_2.history['loss'], label='Train Loss')
-plt.plot(history_2.history['val_loss'], label='Validation Loss')
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.legend()
-plt.show()
-
-plt.plot(history_2.history['mae'], label='Train MAE')
-plt.plot(history_2.history['val_mae'], label='Validation MAE')
-plt.xlabel('Epoch')
-plt.ylabel('MAE')
-plt.legend()
-plt.show()
+# =============================================================================
+# X_pca = data.drop('price', axis=1)
+# y_pca = data['price']
+# 
+# from sklearn.decomposition import PCA
+# features = ['carat', 'volume', 'surface_area']
+# X_pca_features = X_pca[features]
+# X_pca_features
+# 
+# 
+# 
+# pca = PCA(n_components=1)
+# X_pca_var = pca.fit_transform(X_pca)
+# 
+# X_pca_df = pd.DataFrame(X_pca_var, columns=['PCA1'])
+# 
+# 
+# X_pca_df
+# 
+# 
+# X_reduced = X_pca.drop(['carat', 'volume', 'surface_area'], axis=1)
+# 
+# X_final = pd.concat([X_reduced, X_pca_df], axis=1)
+# 
+# X_final
+# 
+# 
+# sns.heatmap(X_final.corr(), annot=True, cmap='magma')
+# 
+# 
+# 
+# X_train_pca, X_test_pca, y_train_pca, y_test_pca = train_test_split(X_final, y_pca, test_size=0.25, random_state=42)
+# 
+# scaler = StandardScaler()
+# 
+# X_train_pca = scaler.fit_transform(X_train_pca)
+# 
+# X_test_pca = scaler.transform(X_test_pca)
+# 
+# 
+# =============================================================================
 
 
 
 
-def rmse(y_true, y_pred):
-    return np.sqrt(mean_squared_error(y_true, y_pred))
 
-print(rmse(y_test_pca,meta_predictions_2))
-
-
+# =============================================================================
+# 
+# 
+# nn_model_2 = Sequential([
+#     Dense(128, input_dim=X_train_pca.shape[1], activation='relu', kernel_regularizer=l2(0.0001)),
+#     Dense(256, activation='relu', kernel_regularizer=l2(0.0001)),
+#     Dense(128, activation='relu', kernel_regularizer=l2(0.0001)),
+#     Dense(1)  # Output layer for regression
+# ])
+# 
+# nn_model_2.compile(optimizer=AdamW(learning_rate=0.001, weight_decay=0.0001),
+#                  loss='mean_squared_error',
+#                  metrics=['mae'])
+# 
+# reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=1e-6)
+# early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+# 
+# history_2 = nn_model_2.fit(X_train_pca, y_train_pca, epochs=100, batch_size=32, validation_split=0.2, verbose=1, callbacks=[reduce_lr, early_stopping])
+# 
+# # Predict using neural network
+# nn_train_preds_2 = nn_model_2.predict(X_train_pca)
+# nn_valid_preds_2 = nn_model_2.predict(X_test_pca)
+# 
+# # 2. **Train XGBoost**
+# 
+# xgboost_model_2 = xgb.XGBRegressor(learning_rate=0.01, n_estimators=1000, max_depth=5, alpha=10, gamma=0.1)
+# xgboost_model_2.fit(X_train_pca, y_train_pca)
+# 
+# # Predict using XGBoost
+# xgboost_train_preds_2 = xgboost_model_2.predict(X_train_pca)
+# xgboost_valid_preds_2 = xgboost_model_2.predict(X_test_pca)
+# 
+# # 3. **Combine Predictions**
+# 
+# # Stack predictions from both models
+# train_meta_features_2 = np.column_stack((xgboost_train_preds_2, nn_train_preds_2.flatten()))
+# valid_meta_features_2 = np.column_stack((xgboost_valid_preds_2, nn_valid_preds_2.flatten()))
+# 
+# # Train meta-learner
+# meta_learner_2 = Ridge()
+# meta_learner_2.fit(train_meta_features_2, y_train_pca)
+# 
+# # Predict and evaluate
+# meta_predictions_2 = meta_learner_2.predict(valid_meta_features_2)
+# new_r2 = r2_score(y_test_pca, meta_predictions_2)
+# print(f"Stacked Model R² Score: {new_r2}")
+# 
+# # Plot training history for Neural Network
+# plt.plot(history_2.history['loss'], label='Train Loss')
+# plt.plot(history_2.history['val_loss'], label='Validation Loss')
+# plt.xlabel('Epoch')
+# plt.ylabel('Loss')
+# plt.legend()
+# plt.show()
+# 
+# plt.plot(history_2.history['mae'], label='Train MAE')
+# plt.plot(history_2.history['val_mae'], label='Validation MAE')
+# plt.xlabel('Epoch')
+# plt.ylabel('MAE')
+# plt.legend()
+# plt.show()
+# 
+# 
+# 
+# 
+# def rmse(y_true, y_pred):
+#     return np.sqrt(mean_squared_error(y_true, y_pred))
+# 
+# print(rmse(y_test_pca,meta_predictions_2))
+# 
+# 
+# =============================================================================
 
 
