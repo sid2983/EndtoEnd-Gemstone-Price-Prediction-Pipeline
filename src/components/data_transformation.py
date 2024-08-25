@@ -9,6 +9,7 @@ import sys
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 from dataclasses import dataclass
 from pathlib import Path
@@ -20,6 +21,18 @@ class DataTransformationConfig:
     preprocessor_obj_file_path=os.path.join('artifacts','preprocessor.pkl')
 
 
+
+class VolumeSurfaceAreaTransformer(BaseEstimator, TransformerMixin):
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        X = X.copy()
+        X['volume'] = X['x'] * X['y'] * X['z']
+        X['surface_area'] = 2 * (X['x'] * X['y'] + X['x'] * X['z'] + X['y'] * X['z'])
+        X.drop(['x', 'y', 'z'], axis=1, inplace=True)
+        
+        return X
 
 class DataTransformation:
     def __init__(self, config:DataTransformationConfig):
@@ -49,9 +62,13 @@ class DataTransformation:
                 ('std_scaler', StandardScaler()),
             ])
 
-            full_pipeline = ColumnTransformer([
-                ('num', num_pipeline, numeric_features),
-                ('cat', cat_pipeline, categorical_features),
+        
+            full_pipeline = Pipeline([
+                ('volumesurfacearea', VolumeSurfaceAreaTransformer()),
+                ('preprocessor', ColumnTransformer([
+                    ('num', num_pipeline, numeric_features),
+                    ('cat', cat_pipeline, categorical_features),
+                ]))
             ])
 
             logging.info("Data Transformation Pipeline Completed")
@@ -76,22 +93,7 @@ class DataTransformation:
 
             preprocessing_obj = self.get_data_transformation_pipeline()
 
-            # Converting X,Y,Z to volume and surface area
-            train_df['volume'] = train_df['x'] * train_df['y'] * train_df['z']
-            train_df['surface_area'] = 2 * (train_df['x'] * train_df['y'] + train_df['x'] * train_df['z'] + train_df['y'] * train_df['z'])
-
-            test_df['volume'] = test_df['x'] * test_df['y'] * test_df['z']
-            test_df['surface_area'] = 2 * (test_df['x'] * test_df['y'] + test_df['x'] * test_df['z'] + test_df['y'] * test_df['z'])
-
-            logging.info(f'Columns in train_df after modification: {train_df.columns}')
-            logging.info(f'Columns in test_df after modification: {test_df.columns}')
-
-            # drop x,y,z columns
-            train_df.drop(['x', 'y', 'z'], axis=1, inplace=True)
-            test_df.drop(['x', 'y', 'z'], axis=1, inplace=True)
-
-            logging.info(f'Columns in train_df after dropping: {train_df.columns}')
-            logging.info(f'Columns in test_df after dropping: {test_df.columns}')
+            
 
             target_column_name = 'price'
             drop_columns = [target_column_name,'id']
@@ -102,11 +104,17 @@ class DataTransformation:
             input_feature_test_df=test_df.drop(columns=drop_columns,axis=1)
             target_feature_test_df=test_df[target_column_name]
 
+            logging.info("Applying preprocessing object on training and testing datasets.")
 
             input_feature_train_arr=preprocessing_obj.fit_transform(input_feature_train_df)
             input_feature_test_arr=preprocessing_obj.transform(input_feature_test_df)
-            
-            logging.info("Applying preprocessing object on training and testing datasets.")
+
+
+            logging.info("Data Transformation Completed")
+            #data head after transformation with column names in df format
+            logging.info(f'Train Data Head after Transformation : \n{pd.DataFrame(input_feature_train_arr,columns=['carat','cut','color','clarity','depth','table','volume','surface_area']).head().to_string()}')
+            logging.info(f'Test Data Head after Transformation : \n{pd.DataFrame(input_feature_test_arr,columns=['carat','cut','color','clarity','depth','table','volume','surface_area']).head().to_string()}')
+
 
             train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
             test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
@@ -117,6 +125,7 @@ class DataTransformation:
             )
 
             logging.info("Preprocessing object saved successfully")
+            logging.info("Data Transformation Completed")
 
             return (train_arr, test_arr)
 
@@ -127,7 +136,7 @@ class DataTransformation:
 
 
 
-            logging.info("Data Transformation Completed")
+
         except Exception as e:
             logging.info("Data Transformation Failed")
             raise CustomException(e,sys)
