@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/IIISI/OneDrive/Documents/py/mlops/firste2eml/mlruns/0/46d24735b3434849a195d8630b0f4ca2/artifacts
+end_time: 1724688712325
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 46d24735b3434849a195d8630b0f4ca2
+run_name: Neural Network Training
+run_uuid: 46d24735b3434849a195d8630b0f4ca2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1724688513346
+status: 3
+tags: []
+user_id: IIISI
