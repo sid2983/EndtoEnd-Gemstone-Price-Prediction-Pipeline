@@ -1,0 +1,16 @@
+# Add patterns of files dvc should ignore, which could improve
+# the performance. Learn more at
+# https://dvc.org/doc/user-guide/dvcignore
+
+
+.dvc/
+.dvc/cache/
+.dvc/tmp/
+.dvc/plots/
+.dvc/experiments/
+*.pyc
+__pycache__/
+.cache/
+.cache/*
+artifacts/train_date_plots/
+

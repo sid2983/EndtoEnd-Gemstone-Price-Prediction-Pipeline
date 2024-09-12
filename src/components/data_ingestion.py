@@ -54,7 +54,3 @@ class DataIngestion:
 
 
 
-if __name__ == '__main__':
-    config = DataIngestionConfig()
-    data_ingestion = DataIngestion(config)
-    data_ingestion.initiate_data_ingestion()

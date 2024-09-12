@@ -1,0 +1,23 @@
+version: "3"
+services:
+  airflow:
+    build: 
+      context: ./
+      dockerfile: Dockerfile.airflow
+
+    image: airflowimage
+    container_name: gemstone_prediction
+    ports:
+      - "8080:8080"  # Airflow UI
+      - "5050:5050"  # MLflow UI
+
+   
+  flaskapp:
+    build: 
+      context: ./
+      dockerfile: Dockerfile.flask
+
+    image: flaskappimage
+    container_name: gemstone_prediction_app
+    ports:
+      - "5000:5000"  # Flask app

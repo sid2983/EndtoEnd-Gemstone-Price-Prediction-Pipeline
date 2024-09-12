@@ -1,0 +1,14 @@
+
+apache-airflow
+numpy
+pandas
+scikit-learn
+xgboost
+seaborn
+matplotlib
+tensorflow
+flask
+mlflow
+dvc
+
+-e .

@@ -1,0 +1,33 @@
+stages:
+  data_ingestion:
+    cmd: python3 src/pipeline/training_pipeline.py start_data_ingestion
+    deps:
+      - src/pipeline/training_pipeline.py
+      - src/components/data_ingestion.py
+
+    outs:
+      - artifacts/raw.csv
+      - artifacts/test.csv
+      - artifacts/train.csv
+
+  data_transformation:
+    cmd: python3 src/pipeline/training_pipeline.py start_data_transformation
+    deps:
+      - src/pipeline/training_pipeline.py
+      - src/components/data_transformation.py
+      - artifacts/train.csv
+      - artifacts/test.csv
+
+    outs:
+      - artifacts/preprocessor.pkl
+
+  model_training:
+    cmd: python3 src/pipeline/training_pipeline.py start_model_training
+    deps:
+      - src/pipeline/training_pipeline.py
+      - src/components/model_trainer.py
+      - artifacts/preprocessor.pkl
+      
+
+    outs:
+      - artifacts/model.pkl
