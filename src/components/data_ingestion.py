@@ -27,7 +27,7 @@ class DataIngestion:
         logging.info("Data Ingestion Started")
         try:
             
-            data = pd.read_csv("https://raw.githubusercontent.com/sid2983/firste2eml/main/experiment/data.csv")
+            data = pd.read_csv("https://raw.githubusercontent.com/sid2983/datahub/master/data.csv")
             logging.info("Data Loaded Successfully")
 
             os.makedirs(os.path.dirname(os.path.join(self.ingestion_config.raw_data_path)),exist_ok=True)
