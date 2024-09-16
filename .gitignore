@@ -162,6 +162,7 @@ cython_debug/
 #.idea/
 /artifact.txt
 
+mlruns/
 
 artifacts/raw.csv
 artifacts/train.csv
