@@ -48,10 +48,14 @@ class ModelTrainer:
         self.model_trainer_config=config
 
     
-    def initiate_model_trainer(self,train_array, test_array):
+    def initiate_model_trainer(self,train_array_path, test_array_path):
         try:
             logging.info("Model Training Started")
             logging.info("Splitting Dependent and Independent variables from train and test data")
+
+
+            train_array = np.load(train_array_path)
+            test_array = np.load(test_array_path)
 
             X_train, y_train, X_test, y_test = (
                 train_array[:,:-1],

@@ -11,5 +11,31 @@ RUN airflow db init
 RUN airflow users create --username admin --password admin --firstname admin --lastname admin --role Admin --email sid24000576@gmail
 RUN chmod 777 start.sh
 RUN apt update -y 
+
+# Create an alias for python to point to python3
+RUN if [ ! -e /usr/local/bin/python ]; then ln -s /usr/local/bin/python3 /usr/local/bin/python; fi
+
+RUN chmod -R 777 /app/logs
+
+
+RUN apt-get update && apt-get install -y curl unzip && \
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install
+
+ENV AWS_ACCESS_KEY_ID=AKIAUBLAMOMDQQWDM2NV
+ENV AWS_SECRET_ACCESS_KEY=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
+ENV AWS_DEFAULT_REGION=ap-south-1
+
+
+RUN aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} && \
+    aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} && \
+    aws configure set default.region ${AWS_DEFAULT_REGION} && \
+    dvc remote add -d datastore s3://ksp-dvc2 && \
+    dvc remote modify datastore access_key_id ${AWS_ACCESS_KEY_ID} && \
+    dvc remote modify datastore secret_access_key ${AWS_SECRET_ACCESS_KEY}
+
+RUN rm awscliv2.zip
+
 ENTRYPOINT [ "/bin/sh" ]
 CMD [ "start.sh" ]

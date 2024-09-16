@@ -10,5 +10,7 @@ tensorflow
 flask
 mlflow
 dvc
+dvc-s3
+
 
 -e .

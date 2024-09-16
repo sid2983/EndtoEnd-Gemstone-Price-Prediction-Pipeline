@@ -116,8 +116,11 @@ class DataTransformation:
             logging.info(f'Test Data Head after Transformation : \n{pd.DataFrame(input_feature_test_arr,columns=['carat','cut','color','clarity','depth','table','volume','surface_area']).head().to_string()}')
 
 
-            train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
-            test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
+            # train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
+            # test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
+
+            np.save('artifacts/train_array.npy', np.c_[input_feature_train_arr, np.array(target_feature_train_df)])
+            np.save('artifacts/test_array.npy', np.c_[input_feature_test_arr, np.array(target_feature_test_df)])
 
             save_object(
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
@@ -127,7 +130,7 @@ class DataTransformation:
             logging.info("Preprocessing object saved successfully")
             logging.info("Data Transformation Completed")
 
-            return (train_arr, test_arr)
+            return 'artifacts/train_array.npy', 'artifacts/test_array.npy'
 
 
 
