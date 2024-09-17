@@ -59,7 +59,7 @@ jobs:
 
     # Step 2: Build & Push Docker Images
   build_and_push:
-    needs: test
+    needs: integration
     runs-on: ubuntu-latest
 
     steps:
