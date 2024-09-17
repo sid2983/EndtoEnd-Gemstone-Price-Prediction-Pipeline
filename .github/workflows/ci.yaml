@@ -2,8 +2,7 @@ name: Gemstone CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main"]
     paths-ignore:
       - 'README.md'
       - 'CONTRIBUTING.md'
@@ -13,8 +12,7 @@ on:
       - 'ISSUE_TEMPLATE.md'
       - '.github/**'
   pull_request:
-    branches:
-      - main
+    branches: [ "main"]
 
 permissions:
   contents: read
