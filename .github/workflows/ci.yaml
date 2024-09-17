@@ -10,7 +10,7 @@ on:
       - 'LICENSE'
       - 'PULL_REQUEST_TEMPLATE.md'
       - 'ISSUE_TEMPLATE.md'
-      - '.github/**'
+      
   pull_request:
     branches: [ "main"]
 
