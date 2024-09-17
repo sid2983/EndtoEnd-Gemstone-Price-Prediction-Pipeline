@@ -6,6 +6,7 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from src.pipeline.training_pipeline import TrainingPipeline
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 training_pipeline = TrainingPipeline()
 
@@ -16,8 +17,9 @@ with DAG(
     },
     description="DAG for training gemstone model",
     #trigger after 15 minutes
-    schedule=timedelta(minutes=15),
-    start_date = pendulum.datetime(2024,9,16, tz="UTC"),
+    schedule=timedelta(minutes=60),
+    start_date = pendulum.datetime(2024,9,16, tz=ZoneInfo('Asia/Kolkata')),
+    concurrency=1,
     catchup=False,
     tags=["machine_learning","Regression","Gemstone"],
 ) as dag:

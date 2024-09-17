@@ -6,7 +6,9 @@ from src.exception.exception import CustomException
 import pandas as pd
 from src.utils.utils import save_object, load_object
 
-
+def get_artifacts_path(filename):
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    return os.path.join(project_root, 'artifacts', filename)
 
 class PredictPipeline:
 
@@ -16,8 +18,10 @@ class PredictPipeline:
     
     def predict(self,features):
         try:
-            preprocessor_path=os.path.join("artifacts","preprocessor.pkl")
-            model_path=os.path.join("artifacts","model.pkl")
+            # preprocessor_path=os.path.join("artifacts","preprocessor.pkl")
+            preprocessor_path=get_artifacts_path('preprocessor.pkl')
+            # model_path=os.path.join("artifacts","model.pkl")
+            model_path=get_artifacts_path('model.pkl')
             loaded_models = load_object(model_path)
 
             preprocessor=load_object(preprocessor_path)

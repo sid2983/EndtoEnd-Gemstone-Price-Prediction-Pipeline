@@ -1,4 +1,5 @@
 
+apache-airflow
 numpy
 pandas
 scikit-learn
@@ -9,6 +10,7 @@ tensorflow
 flask
 mlflow
 dvc
+dvc-s3
 
 
 # dev requirements
