@@ -90,3 +90,14 @@ jobs:
 
 
   
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+
+
+    steps:
+      - name: SSH into server and pull latest images (You can use self-hosted runners or SSH action)
+        run: |
+          ssh user@server 'docker pull ${{ secrets.DOCKER_USERNAME }}/airflow:latest'
+          ssh user@server 'docker pull ${{ secrets.DOCKER_USERNAME }}/flask:latest'
+          ssh user@server 'docker-compose up -d --build'
