@@ -50,6 +50,16 @@ jobs:
         run: |
           sudo mkdir -p /app/logs
           sudo chmod -R 777 /app/logs
+
+      - name: Configure AWS Credentials  
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+  
+      - name: Pull artifacts from DVC  # Pull the files tracked by DVC
+        run: dvc pull
         
 
       - name: Run Unit Tests
