@@ -59,7 +59,7 @@ jobs:
           aws-region: ap-south-1
   
       - name: Pull artifacts from DVC  # Pull the files tracked by DVC
-        run: dvc pull
+        run: dvc pull -v
         
 
       - name: Run Unit Tests
