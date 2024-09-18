@@ -15,7 +15,7 @@ RUN apt update -y
 # Create an alias for python to point to python3
 RUN if [ ! -e /usr/local/bin/python ]; then ln -s /usr/local/bin/python3 /usr/local/bin/python; fi
 
-RUN chmod -R 777 /app/logs
+RUN mkdir -p /app/logs && chmod -R 777 /app/logs
 
 
 RUN apt-get update && apt-get install -y curl unzip && \
