@@ -2,5 +2,4 @@
     remote = datastore
 ['remote "datastore"']
     url = s3://ksp-dvc2
-    access_key_id = AKIAUBLAMOMDQQWDM2NV
-    secret_access_key = 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
+    
