@@ -101,8 +101,9 @@ jobs:
           docker tag ${{ secrets.DOCKER_USERNAME }}/airflow:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/airflow:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/airflow:latest
           # Push to ECR
-          docker tag ${{ secrets.DOCKER_USERNAME }}/airflow:${{ github.sha }} ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.ap-south-1.amazonaws.com/airflow-app:latest
-          docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.ap-south-1.amazonaws.com/airflow-app:latest
+          docker tag ${{ secrets.DOCKER_USERNAME }}/airflow:${{ github.sha }} public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/airflow-app:${{ github.sha }}
+          docker tag ${{ secrets.DOCKER_USERNAME }}/airflow:latest public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/airflow-app:latest
+          docker push public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/airflow-app:latest
 
       - name: Build and push Flask Docker image to DockerHub and ECR
         run: |
@@ -112,5 +113,6 @@ jobs:
           docker tag ${{ secrets.DOCKER_USERNAME }}/flask:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/flask:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/flask:latest
           # Push to ECR
-          docker tag ${{ secrets.DOCKER_USERNAME }}/flask:${{ github.sha }} ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.ap-south-1.amazonaws.com/flask-app:latest
-          docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.ap-south-1.amazonaws.com/flask-app:latest
+          docker tag ${{ secrets.DOCKER_USERNAME }}/flask:${{ github.sha }} public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/flask-app:${{ github.sha }}
+          docker tag ${{ secrets.DOCKER_USERNAME }}/flask:latest public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/flask-app:latest
+          docker push public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/flask-app:latest
