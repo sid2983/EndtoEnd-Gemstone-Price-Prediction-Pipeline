@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y curl unzip && \
 
 # Set up DVC remote without storing credentials
 RUN if ! dvc remote list | grep -q 'datastore'; then \
-    dvc remote add -d datastore s3://ksp-dvc2 \
+    dvc remote add -d datastore s3://ksp-dvc2; \
     fi
 
 # ENTRYPOINT and CMD for the container

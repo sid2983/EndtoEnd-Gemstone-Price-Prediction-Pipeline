@@ -19,7 +19,7 @@ RUN pip install -r requirements.txt
 
 # Set up DVC remote without credentials stored in the image
 RUN if ! dvc remote list | grep -q 'datastore'; then \
-    dvc remote add -d datastore s3://ksp-dvc2 \
+    dvc remote add -d datastore s3://ksp-dvc2; \
     fi
 
 # CMD for running the Flask app
