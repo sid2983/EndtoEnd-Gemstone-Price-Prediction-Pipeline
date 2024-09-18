@@ -101,6 +101,9 @@ jobs:
           docker tag ${{ secrets.DOCKER_USERNAME }}/airflow:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/airflow:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/airflow:latest
           # Push to ECR
+          #login to ecr-public
+          aws ecr-public get-login-password --region ap-south-1 | docker login --username AWS --password-stdin public.ecr.aws/i2z8g3y1
+
           docker tag ${{ secrets.DOCKER_USERNAME }}/airflow:${{ github.sha }} public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/airflow-app:${{ github.sha }}
           docker tag ${{ secrets.DOCKER_USERNAME }}/airflow:latest public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/airflow-app:latest
           docker push public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/airflow-app:latest
@@ -113,6 +116,9 @@ jobs:
           docker tag ${{ secrets.DOCKER_USERNAME }}/flask:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/flask:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/flask:latest
           # Push to ECR
+          #login to ecr-public
+          aws ecr-public get-login-password --region ap-south-1 | docker login --username AWS --password-stdin public.ecr.aws/i2z8g3y1
+
           docker tag ${{ secrets.DOCKER_USERNAME }}/flask:${{ github.sha }} public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/flask-app:${{ github.sha }}
           docker tag ${{ secrets.DOCKER_USERNAME }}/flask:latest public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/flask-app:latest
           docker push public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/flask-app:latest
