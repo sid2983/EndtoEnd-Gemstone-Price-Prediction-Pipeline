@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1726598543170
+current_stage: None
+description: null
+last_updated_timestamp: 1726598543170
+name: XGBoostModel
+run_id: 390ba11eddb2443d966ec7052a3c0b3a
+run_link: null
+source: file:///C:/Users/IIISI/OneDrive/Documents/py/mlops/firste2eml/mlruns/0/390ba11eddb2443d966ec7052a3c0b3a/artifacts/xgboost_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/IIISI/OneDrive/Documents/py/mlops/firste2eml/mlruns/0/390ba11eddb2443d966ec7052a3c0b3a/artifacts/xgboost_model
+user_id: null
+version: 2

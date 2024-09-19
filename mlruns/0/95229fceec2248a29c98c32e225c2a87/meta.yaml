@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/IIISI/OneDrive/Documents/py/mlops/firste2eml/mlruns/0/95229fceec2248a29c98c32e225c2a87/artifacts
+end_time: 1726598552134
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 95229fceec2248a29c98c32e225c2a87
+run_name: Stacking Model Training
+run_uuid: 95229fceec2248a29c98c32e225c2a87
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1726598544444
+status: 3
+tags: []
+user_id: IIISI

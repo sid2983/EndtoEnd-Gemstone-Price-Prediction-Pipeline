@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1726598552083
+current_stage: None
+description: null
+last_updated_timestamp: 1726598552083
+name: StackingModel
+run_id: 95229fceec2248a29c98c32e225c2a87
+run_link: null
+source: file:///C:/Users/IIISI/OneDrive/Documents/py/mlops/firste2eml/mlruns/0/95229fceec2248a29c98c32e225c2a87/artifacts/meta_learner_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/IIISI/OneDrive/Documents/py/mlops/firste2eml/mlruns/0/95229fceec2248a29c98c32e225c2a87/artifacts/meta_learner_model
+user_id: null
+version: 2

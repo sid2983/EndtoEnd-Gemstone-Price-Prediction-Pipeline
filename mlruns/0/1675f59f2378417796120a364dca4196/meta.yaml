@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/IIISI/OneDrive/Documents/py/mlops/firste2eml/mlruns/0/1675f59f2378417796120a364dca4196/artifacts
+end_time: 1726485476831
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1675f59f2378417796120a364dca4196
+run_name: XGBoost Training
+run_uuid: 1675f59f2378417796120a364dca4196
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1726485462720
+status: 3
+tags: []
+user_id: IIISI

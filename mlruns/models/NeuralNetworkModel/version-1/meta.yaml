@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1726485448257
+current_stage: None
+description: null
+last_updated_timestamp: 1726485448257
+name: NeuralNetworkModel
+run_id: f5db1c937280469793b82b8a78836599
+run_link: null
+source: file:///C:/Users/IIISI/OneDrive/Documents/py/mlops/firste2eml/mlruns/0/f5db1c937280469793b82b8a78836599/artifacts/neural_network_model
+status: READY
+status_message: null
+storage_location: file:///C:/Users/IIISI/OneDrive/Documents/py/mlops/firste2eml/mlruns/0/f5db1c937280469793b82b8a78836599/artifacts/neural_network_model
+user_id: null
+version: 1
