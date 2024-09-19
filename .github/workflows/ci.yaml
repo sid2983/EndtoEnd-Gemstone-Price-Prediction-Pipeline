@@ -135,6 +135,9 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get install openssh-client
 
+      - name: Create SSH directory
+        run: mkdir -p ~/.ssh
+
       - name: Add EC2 Instance to Known Hosts
         run: ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
 
