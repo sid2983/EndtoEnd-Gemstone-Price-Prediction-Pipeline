@@ -11,10 +11,7 @@ services:
       - "8080:8080"  # Airflow UI
       - "5050:5050"  # MLflow UI
 
-    environment:
-      - AWS_ACCESS_KEY_ID=AKIAUBLAMOMDQQWDM2NV
-      - AWS_SECRET_ACCESS_KEY=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
-      - AWS_DEFAULT_REGION=ap-south-1
+
    
   flaskapp:
     build: 
@@ -26,7 +23,3 @@ services:
     ports:
       - "5000:5000"  # Flask app
 
-    environment:
-      - AWS_ACCESS_KEY_ID=AKIAUBLAMOMDQQWDM2NV
-      - AWS_SECRET_ACCESS_KEY=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
-      - AWS_DEFAULT_REGION=ap-south-1

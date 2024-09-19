@@ -138,6 +138,13 @@ jobs:
       - name: Create SSH directory
         run: mkdir -p ~/.ssh
 
+      # Create SSH key from GitHub Secret
+      - name: Create SSH key
+        run: echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+
+      - name: Set permissions for SSH key
+        run: chmod 600 ~/.ssh/id_rsa
+
       - name: Add EC2 Instance to Known Hosts
         run: ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
 
