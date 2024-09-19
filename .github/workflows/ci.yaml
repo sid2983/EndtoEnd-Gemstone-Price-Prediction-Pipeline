@@ -153,7 +153,7 @@ jobs:
           ECR_REPO_URL: public.ecr.aws/i2z8g3y1/airflow-app
           ECR_REPO_URL_FLASK: public.ecr.aws/i2z8g3y1/flask-app
         run: |
-          ssh -i ${{ secrets.EC2_SSH_KEY }} -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} << EOF
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} << EOF
             # Login to ECR Public
             aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i2z8g3y1
             
