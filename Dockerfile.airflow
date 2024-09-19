@@ -39,6 +39,10 @@ RUN if ! dvc remote list | grep -q 'datastore'; then \
     dvc remote add -d datastore s3://ksp-dvc2; \
     fi
 
+
+EXPOSE 8080
+EXPOSE 5050
+
 # ENTRYPOINT and CMD for the container
 ENTRYPOINT [ "/bin/sh" ]
 CMD [ "start.sh" ]

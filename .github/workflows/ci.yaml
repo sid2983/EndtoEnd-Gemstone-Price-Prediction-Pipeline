@@ -122,3 +122,44 @@ jobs:
           docker tag ${{ secrets.DOCKER_USERNAME }}/flask:${{ github.sha }} public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/flask-app:${{ github.sha }}
           docker tag ${{ secrets.DOCKER_USERNAME }}/flask:latest public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/flask-app:latest
           docker push public.ecr.aws/${{ secrets.ECR_SECRET_ID }}/flask-app:latest
+
+
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install SSH client
+        run: sudo apt-get install openssh-client
+
+      - name: Add EC2 Instance to Known Hosts
+        run: ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
+
+      - name: SSH into EC2 and deploy
+        env:
+          ECR_REPO_URL: public.ecr.aws/i2z8g3y1/airflow-app
+          ECR_REPO_URL_FLASK: public.ecr.aws/i2z8g3y1/flask-app
+        run: |
+          ssh -i ${{ secrets.EC2_SSH_KEY }} -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} << EOF
+            # Login to ECR Public
+            aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i2z8g3y1
+            
+            # Pull the Docker images
+            docker pull $ECR_REPO_URL:latest
+            docker pull $ECR_REPO_URL_FLASK:latest
+
+            # Stop any running containers
+            docker stop airflow || true
+            docker stop flask || true
+
+            # Remove old containers
+            docker rm airflow || true
+            docker rm flask || true
+
+            # Run new containers
+            docker run -d --name airflow -p 8080:8080 -p 5050:5050 $ECR_REPO_URL:latest
+            docker run -d --name flask -p 5000:5000 $ECR_REPO_URL_FLASK:latest
+          EOF
