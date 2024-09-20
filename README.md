@@ -1,14 +1,16 @@
-# 🏆 Diamond Price Prediction MLOps Project
+# 🏆 Diamond Price Prediction MLOPS Project
 
 ![Airflow-MLFlow-Flask](https://img.shields.io/badge/MLops-Automated-blue)
 ![Docker](https://img.shields.io/badge/Docker-Running-green)
 ![AWS EC2](https://img.shields.io/badge/AWS%20EC2-Deployed-yellow)
+[![Gemstone CI/CD](https://github.com/sid2983/EndtoEnd-Gemstone-Price-Prediction-Pipeline/actions/workflows/ci.yaml/badge.svg)](https://github.com/sid2983/EndtoEnd-Gemstone-Price-Prediction-Pipeline/actions/workflows/ci.yaml)
 
 Welcome to the **Diamond Price Prediction MLOps Project**! This project demonstrates the end-to-end automation and deployment of a machine learning pipeline using modern tools like Airflow, MLflow, Docker, DVC, and AWS EC2. It focuses on predicting diamond prices based on key features like carat, clarity, and cut.
 
 <p align="center">
-  <img src="" alt="Airflow UI Screenshot" width="700"/>
-  <img src="https://drive.google.com/file/d/19VgZ7e7p0QkC_dkohFLATNVjSYZUrnEO/view?usp=sharing" alt="MLflow UI Screenshot" width="700"/>
+  <img src="airflow running on AWS.jpg" alt="Airflow Dag Screenshot" width="500"/>
+  <img src="mlflow running on AWS.jpg" alt="MLflow UI Screenshot" width="500"/>
+  <img src="CI-CD.jpg" alt="Deployment sst" width="1000"/>
 </p>
 
 ---
@@ -40,14 +42,19 @@ The components are designed to run seamlessly within Docker containers, making t
 - Entire system packaged into **Docker containers**, ensuring consistency across environments.
 - Separate Docker containers for **Airflow, MLflow**, and **Flask** services.
 
-### ☁️ AWS EC2 Hosting
+### ☁️ AWS EC2 Hosting and ECR Container Registry
 - Deployed the entire pipeline on **AWS EC2** for cloud scalability.
 - Data is stored and versioned in **AWS S3** using DVC, ensuring efficient data management.
+- Container Images are stored in **AWS ECR** Public and Dockerhub : sid2983/airflow:latest and sid2983/flask:latest
 
 ### 📡 REST API for Predictions
 - A **Flask** app serves the model and exposes a REST API to make predictions.
 - Use `POST` requests with JSON payloads to get diamond price predictions.
 
+### CI-CD Pipeline using Github Actions 
+- Job for Continuous Integration after testing
+- Job for Building and Pushing Images to Docker Registeries (ECR and Dockerhub)
+- Job for Continuous Deployment on AWS EC2 instance.
 ---
 
 ## 🧰 Tech Stack
@@ -55,37 +62,29 @@ The components are designed to run seamlessly within Docker containers, making t
 <p align="center p-3">
   <img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" />
   <img src="https://img.shields.io/badge/TensorFlow-FF6F00?logo=tensorflow&logoColor=white" />
+  <img src="https://img.shields.io/badge/DVC-945DD6?logo=dvc&logoColor=white" />
   <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" />
   <img src="https://img.shields.io/badge/Apache%20Airflow-017CEE?logo=apacheairflow&logoColor=white" />
   <img src="https://img.shields.io/badge/MLflow-0194E2?logo=mlflow&logoColor=white" />
   <img src="https://img.shields.io/badge/Flask-000000?logo=flask&logoColor=white" />
-  <img src="https://img.shields.io/badge/DVC-945DD6?logo=dvc&logoColor=white" />
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white" />
+  <img src="https://img.shields.io/badge/AWS%20ECR-FF9900?logo=amazonecr&logoColor=white" />
+  <img src="https://img.shields.io/badge/DockerHub-2496ED?logo=docker&logoColor=white" />
   <img src="https://img.shields.io/badge/AWS-FF9900?logo=amazonaws&logoColor=white" />
   <img src="https://img.shields.io/badge/EC2-FF9900?logo=amazonec2&logoColor=white" />
   <img src="https://img.shields.io/badge/AWS%20S3-569A31?logo=amazons3&logoColor=white" />
-  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white" />
+  
 </p>
 
-- **Languages & Frameworks**: Python, Flask
+- **Languages & Frameworks**: Python, Flask, Tensorflow
 - **Containerization**: Docker
+- **Container Registry**: Dockerhub, AWS ECR
 - **Pipeline Orchestration**: Apache Airflow
 - **Experiment Tracking**: MLflow
 - **Data Version Control**: DVC
-- **Cloud Infrastructure**: AWS EC2, S3
+- **Cloud Infrastructure and Deployment**: AWS EC2, S3
 - **CI/CD**: GitHub Actions
 
 ---
 
-## ⚙️ Project Structure
 
-```bash
-.
-├── airflow/
-├── flask_app/
-├── mlruns/             # MLflow experiment tracking
-├── dvc.yaml            # DVC pipeline definition
-├── Dockerfile.airflow   # Docker configuration for Airflow
-├── Dockerfile.flask     # Docker configuration for Flask app
-├── requirements.txt     # Python dependencies
-├── start.sh             # Start script for Docker services
-└── tox.ini              # For running tests
