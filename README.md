@@ -5,7 +5,7 @@
 ![AWS EC2](https://img.shields.io/badge/AWS%20EC2-Deployed-yellow)
 [![Gemstone CI/CD](https://github.com/sid2983/EndtoEnd-Gemstone-Price-Prediction-Pipeline/actions/workflows/ci.yaml/badge.svg)](https://github.com/sid2983/EndtoEnd-Gemstone-Price-Prediction-Pipeline/actions/workflows/ci.yaml)
 
-Welcome to the **Diamond Price Prediction MLOps Project**! This project demonstrates the end-to-end automation and deployment of a machine learning pipeline using modern tools like Airflow, MLflow, Docker, DVC, and AWS EC2. It focuses on predicting diamond prices based on key features like carat, clarity, and cut.
+Welcome to the **Diamond Price Prediction MLOps Project**! This project demonstrates the end-to-end automation and deployment of a machine learning pipeline using modern tools like Airflow, MLflow, Docker, DVC, and AWS EC2. It focuses on predicting diamond prices based on key features like carat, clarity, and cut, depth , dimensions, table, etc. The Stacked neural network model results in great R2 score of 98%.
 
 <p align="center">
   <img src="airflow running on AWS.jpg" alt="Airflow Dag Screenshot" width="500"/>
@@ -31,7 +31,8 @@ The components are designed to run seamlessly within Docker containers, making t
 ## 📚 Features
 
 ### 🔄 End-to-End Pipeline Automation
-- Automated data ingestion, transformation, model training, and model serving.
+- Automated Data Ingestion, Transformation, Model Training, and model Serving.
+- Created one Stacked Model of Artificial Neural Network (ANN) and XGBOOST to create a meta model which gave the prediction score (R2) of 98%.
 - Airflow DAGs handle the complete workflow for orchestrating tasks such as **data ingestion, transformation, model training, and deployment**.
 
 ### 🧬 Model Versioning with MLflow
