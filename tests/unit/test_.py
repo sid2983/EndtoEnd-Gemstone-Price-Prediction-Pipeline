@@ -4,6 +4,12 @@ from src.pipeline.prediction_pipeline import PredictPipeline,CustomData
 import numpy as np
 import pandas as pd
 
+# Adding a dummy test to check the CI_CD
+def dummy_test():
+    assert 1==1
+
+
+
 def get_artifacts_path(filename):
     project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     return os.path.join(project_root, 'artifacts', filename)
